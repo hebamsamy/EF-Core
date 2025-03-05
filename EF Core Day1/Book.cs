@@ -23,7 +23,6 @@ namespace EF_Core_Day1
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 
-
         [ForeignKey("Auther")]
         public int AutherId { get; set; }
         public Auther Auther { get; set; }
