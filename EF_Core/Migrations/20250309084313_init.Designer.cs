@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EF_Core.Migrations
 {
     [DbContext(typeof(EShopContext))]
-    [Migration("20250308100855_init")]
+    [Migration("20250309084313_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -34,11 +34,9 @@ namespace EF_Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -51,6 +49,28 @@ namespace EF_Core.Migrations
                         .IsUnique();
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Electronics"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Food"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Cloths"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Bauty"
+                        });
                 });
 
             modelBuilder.Entity("EF_Core.Models.Client", b =>
@@ -81,16 +101,14 @@ namespace EF_Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("Clients");
                 });
@@ -110,7 +128,9 @@ namespace EF_Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -127,12 +147,6 @@ namespace EF_Core.Migrations
 
             modelBuilder.Entity("EF_Core.Models.OrderItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
@@ -140,11 +154,11 @@ namespace EF_Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
+                    b.HasKey("OrderId", "ProductId");
 
                     b.HasIndex("ProductId");
 
@@ -162,8 +176,14 @@ namespace EF_Core.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("NVARCHAR(500)");
+
+                    b.Property<bool>("IsDelated")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -178,9 +198,14 @@ namespace EF_Core.Migrations
                         .HasDefaultValue(1)
                         .HasColumnName("Stock");
 
+                    b.Property<int>("VendorId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("VendorId");
 
                     b.ToTable("Products");
                 });
@@ -264,18 +289,14 @@ namespace EF_Core.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Vendors");
-                });
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
-            modelBuilder.Entity("EF_Core.Models.Client", b =>
-                {
-                    b.HasOne("EF_Core.Models.Product", null)
-                        .WithMany("Clients")
-                        .HasForeignKey("ProductId");
+                    b.ToTable("Vendors");
                 });
 
             modelBuilder.Entity("EF_Core.Models.Order", b =>
@@ -316,7 +337,15 @@ namespace EF_Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("EF_Core.Models.Vendor", "Vendor")
+                        .WithMany("Products")
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("Vendor");
                 });
 
             modelBuilder.Entity("EF_Core.Models.ProductAttachment", b =>
@@ -360,13 +389,13 @@ namespace EF_Core.Migrations
                 {
                     b.Navigation("Attachments");
 
-                    b.Navigation("Clients");
-
                     b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("EF_Core.Models.Vendor", b =>
                 {
+                    b.Navigation("Products");
+
                     b.Navigation("Shop")
                         .IsRequired();
                 });

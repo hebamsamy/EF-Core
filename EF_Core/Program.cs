@@ -14,6 +14,17 @@
 // update-database productvendorrelation //Undo Till productvendorrelation
 // get-migration // list all migration with status 
 
+//Day Three
+// Models Configration
+// Data Seeding
+
+// Execution 
+//Eager
+//Implicit
+//Lazy
+
+using Microsoft.EntityFrameworkCore;
+
 namespace EF_Core
 {
     public class Program
@@ -21,6 +32,24 @@ namespace EF_Core
         public static void Main(string[] args)
         {
 
+            EShopContext context = new EShopContext();
+
+
+            //Eager Loading
+
+            var data = context.Categories.ToList();
+            //var data = context.Categories
+            //    //.Include(c => c.Products)
+            //    //.ThenInclude(p => p.Attachments)
+            //    .ToList();
+            foreach (var item in data)
+            {
+                Console.WriteLine($"{item.Name} ");
+                foreach (var prd in item.Products)
+                {
+                    Console.WriteLine($"{prd.Attachments.Count}");
+                }
+            }
         }
     }
 }

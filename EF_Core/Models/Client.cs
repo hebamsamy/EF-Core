@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,8 +18,17 @@ namespace EF_Core.Models
         public string Picture { get; set; }
         public string HashPassword { get; set; }
 
-        public ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     
 
+    }
+
+    public class ClientConfigration : IEntityTypeConfiguration<Client>
+    {
+        public void Configure(EntityTypeBuilder<Client> modelBuilder)
+        {
+            modelBuilder.HasKey(c => c.Id);
+            modelBuilder.HasIndex(c => c.UserName).IsUnique();
+        }
     }
 }
