@@ -37,6 +37,7 @@ namespace EF_Core
             modelBuilder.ApplyConfiguration(new ProductAttachmentConfigration());
             modelBuilder.ApplyConfiguration(new ShopConfigration());
             modelBuilder.ApplyConfiguration(new VendorConfigration());
+
             //init Create Tables with some Data
             modelBuilder.DataSeeding();
 
