@@ -1,4 +1,5 @@
 ﻿using EF_Core.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EF_Core
 {
-    public class EShopContext : DbContext
+    public class EShopContext : IdentityDbContext<User>
     {
         //tables
         public DbSet<Category> Categories { get; set; }
@@ -23,7 +24,7 @@ namespace EF_Core
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data source = DESKTOP-0KJMNFC; Initial catalog = E-Shop; Integrated security= true; trustservercertificate = true;");
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data source = DESKTOP-0KJMNFC; Initial catalog = E-Shopp; Integrated security= true; trustservercertificate = true;");
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -41,7 +42,7 @@ namespace EF_Core
             //init Create Tables with some Data
             modelBuilder.DataSeeding();
 
-            //base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

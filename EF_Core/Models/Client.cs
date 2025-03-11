@@ -10,13 +10,9 @@ namespace EF_Core.Models
 {
     public class Client
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Picture { get; set; }
-        public string HashPassword { get; set; }
+        public string UserId { get; set; }
+        public virtual User User { get; set; }
+        
 
         public virtual ICollection<Order> Orders { get; set; }
     
@@ -27,8 +23,13 @@ namespace EF_Core.Models
     {
         public void Configure(EntityTypeBuilder<Client> modelBuilder)
         {
-            modelBuilder.HasKey(c => c.Id);
-            modelBuilder.HasIndex(c => c.UserName).IsUnique();
+            modelBuilder.HasKey(i => i.UserId);
+            modelBuilder
+                .HasOne(v => v.User)
+                .WithOne(u => u.Client)
+                .HasForeignKey<Client>(v => v.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }

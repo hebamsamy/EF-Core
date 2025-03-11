@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
@@ -21,10 +22,13 @@ namespace EF_Core.Models
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
 
-        public int VendorId { get; set; }
+        public string VendorId { get; set; }
         public virtual Vendor Vendor { get; set; }
         public bool IsDelated { get; set; }
+        //[NotMapped]
         public DateTime CreatedAt { get; set; }
+
+
         public virtual ICollection<ProductAttachment> Attachments { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
@@ -50,6 +54,9 @@ namespace EF_Core.Models
                .HasOne(prd => prd.Vendor)
                .WithMany(vendor => vendor.Products)
                .HasForeignKey(prd => prd.VendorId);
+
+            //modelBuilder.HasQueryFilter(i => i.IsDelated == false && i.Quantity > 0);
+           
         }
     }
 }

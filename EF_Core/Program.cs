@@ -22,6 +22,9 @@
 //Implicit
 //Lazy
 
+//Day Five
+//Query Filter 
+
 using EF_Core.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -140,10 +143,13 @@ namespace EF_Core
             //} 
             #endregion
 
-           //var dare=  context.Products.FromSqlRaw("select * from Products where Id=2 ");
+            //var dare=  context.Products.FromSqlRaw("select * from Products where Id=2 ");
 
 
-           // context.Database.ExecuteSqlRaw("Update [Orders] set Status = 1 go ");
+            // context.Database.ExecuteSqlRaw("Update [Orders] set Status = 1 go ");
+
+
+            var data = context.Products.IgnoreQueryFilters().Where(p=>p.Id == 1).ToList();
         }
     }
 }

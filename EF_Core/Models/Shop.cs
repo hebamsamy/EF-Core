@@ -15,7 +15,7 @@ namespace EF_Core.Models
         public string Name { get; set; }
         public string Logo { get; set; }
 
-        public int VendorId { get; set; }
+        public string VendorId { get; set; }
         public virtual Vendor Vendor { get; set; }
     }
     public class ShopConfigration : IEntityTypeConfiguration<Shop>
@@ -28,6 +28,9 @@ namespace EF_Core.Models
                 .HasOne(sp => sp.Vendor)
                 .WithOne(vr => vr.Shop)
                 .HasForeignKey<Shop>(sp => sp.VendorId);
+
+            modelBuilder.Property<string>("CreatedBy");
+            modelBuilder.Property<DateTime>("CreatedAt").HasDefaultValueSql("GETDate()");
         }
     }
 }

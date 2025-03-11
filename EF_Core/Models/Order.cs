@@ -18,7 +18,7 @@ namespace EF_Core.Models
         public OrderStatus Status { get; set; }
 
         public virtual Client Client { get; set; }
-        public int ClientId { get; set; }
+        public string ClientId { get; set; }
         
         public virtual ICollection<OrderItem> Items { get; set; }
 
